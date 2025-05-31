@@ -1,0 +1,43 @@
+#include <OneWire.h>            // Biblioteca para comunicação com o barramento OneWire
+#include <DallasTemperature.h>  // Biblioteca para controlar o sensor DS18B20
+
+
+// Definindo o pino de dados do sensor DS18B20
+#define ONE_WIRE_BUS 12
+
+
+// Configurando o barramento OneWire
+OneWire oneWire(ONE_WIRE_BUS);
+
+
+// Criando um objeto DallasTemperature para controlar o sensor
+DallasTemperature sensors(&oneWire);
+
+
+void setup() {
+  Serial.begin(9600);  // Inicia a comunicação serial no baud rate 9600
+  sensors.begin();     // Inicializa o sensor DS18B20
+  Serial.println("Leitura de Temperatura com DS18B20");
+}
+
+
+void loop() {
+  sensors.requestTemperatures();  // Solicita a leitura da temperatura do sensor
+
+
+  // Lê a temperatura em Celsius
+  float temperatura = sensors.getTempCByIndex(0);
+
+
+  // Verifica se a leitura foi válida
+  if (temperatura != DEVICE_DISCONNECTED_C) {
+    Serial.print("Temperatura: ");
+    Serial.print(temperatura);
+    Serial.println(" °C");
+  } else {
+    Serial.println("Falha ao ler o sensor");
+  }
+
+
+  delay(1000);  // Atraso de 1 segundo antes de ler novamente
+}
